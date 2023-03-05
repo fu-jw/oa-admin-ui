@@ -38,5 +38,13 @@ export default {
       url: `${api_name}/remove/${id}`,
       method: 'delete'
     })
-  }
+  },
+  // 批量删除
+  batchRemove(idList) {
+    return request({
+      url: `${api_name}/batchRemove`,
+      method: `delete`,
+      data: idList
+    })
+  },
 }

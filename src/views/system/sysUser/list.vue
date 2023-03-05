@@ -24,15 +24,11 @@
           </el-col>
         </el-row>
         <el-row style="display:flex">
+          <!-- <el-button type="success" icon="el-icon-plus" size="mini" @click="add">添 加</el-button> -->
           <el-button type="primary" icon="el-icon-search" size="mini" :loading="loading" @click="fetchData()">搜索</el-button>
           <el-button icon="el-icon-refresh" size="mini" @click="resetData">重置</el-button>
         </el-row>
       </el-form>
-    </div>
-
-    <!-- 工具条 -->
-    <div class="tools-div">
-      <el-button type="success" icon="el-icon-plus" size="mini" @click="add">添 加</el-button>
     </div>
 
     <!-- 列表 -->
@@ -41,8 +37,11 @@
       :data="list"
       stripe
       border
-      style="width: 100%;margin-top: 10px;">
+      style="width: 100%;margin-top: 10px;"
+      @selection-change="handleSelectionChange">
 
+      <el-table-column type="selection"/>
+      
       <el-table-column
         label="序号"
         width="70"
@@ -56,8 +55,8 @@
       <el-table-column prop="name" label="姓名" width="70"/>
       <el-table-column prop="phone" label="手机" width="120"/>
       <el-table-column prop="postName" label="岗位" width="100"/>
-      <el-table-column prop="deptName" label="部门" width="100"/>
-      <el-table-column label="所属角色" width="130">
+      <el-table-column prop="deptName" label="部门" width="80"/>
+      <el-table-column label="所属角色" width="100">
         <template slot-scope="scope">
           <span v-for="item in scope.row.roleList" :key="item.id" style="margin-right: 10px;">{{ item.roleName }}</span>
         </template>
@@ -79,6 +78,11 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- 工具条 -->
+    <div class="tools-div">
+      <el-button type="success" icon="el-icon-plus" size="mini" @click="add">添 加</el-button>
+      <el-button class="btn-add" size="mini" @click="batchRemove()" >批量删除</el-button>
+    </div>
 
     <!-- 分页组件 -->
     <el-pagination
@@ -140,6 +144,7 @@ export default {
       dialogVisible: false,
       sysUser: defaultForm,
       saveBtnDisabled: false,
+      multipleSelection: []// 批量删除选中的记录列表
     }
   },
 
@@ -257,7 +262,37 @@ export default {
         this.dialogVisible = false
         this.fetchData(this.page)
       })
+    },
+    // 当多选选项发生变化的时候调用
+    handleSelectionChange(selection) {
+    console.log(selection)
+    this.multipleSelection = selection
+    },
+    // 批量删除
+    batchRemove() {
+    if (this.multipleSelection.length === 0) {
+        this.$message.warning('请选择要删除的记录！')
+        return
     }
+    this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(() => {
+        // 点击确定，远程调用ajax
+        // 遍历selection，将id取出放入id列表
+        var idList = []
+        this.multipleSelection.forEach(item => {
+        idList.push(item.id)
+        })
+        // 调用api
+        return api.batchRemove(idList)
+    }).then((response) => {
+        this.fetchData()
+        this.$message.success(response.message)
+    })
+    }
+
   }
 }
 </script>

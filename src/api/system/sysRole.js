@@ -47,7 +47,7 @@ export default {
       data: role
     })
   },
-  // 
+  // 批量删除
   batchRemove(idList) {
     return request({
       url: `${api_name}/batchRemove`,

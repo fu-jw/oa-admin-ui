@@ -101,7 +101,7 @@ return {
       page: 1, // 页码
       limit: 10, // 每页记录数
       searchObj: {}, // 查询条件
-      multipleSelection: [],// 批量删除选中的记录列表
+      //multipleSelection: [],// 批量删除选中的记录列表
       dialogVisible: false,
       sysRole: {},
       saveBtnDisabled: false,
