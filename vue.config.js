@@ -27,7 +27,7 @@ module.exports = {
   publicPath: '/',
   outputDir: 'dist',
   assetsDir: 'static',
-  lintOnSave: process.env.NODE_ENV === 'development',
+  lintOnSave: false,//process.env.NODE_ENV === 'development', 设置不校验
   productionSourceMap: false,
   devServer: {
     port: port,
