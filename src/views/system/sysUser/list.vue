@@ -43,7 +43,7 @@
 
       <el-table-column
         label="序号"
-        width="70"
+        width="50"
         align="center">
         <template slot-scope="scope">
           {{ (page - 1) * limit + scope.$index + 1 }}
